@@ -16,7 +16,15 @@ class Products{
    async getProducts(){
      try {
         let results = await fetch("products.json");
-        return results;
+        let data = await results.json();
+        let products = data.items;
+        products = products.map(item => {
+            const {title, price} = item.fields;
+            const {id} = item.sys;
+            const image = item.fields.image.fields.file.url
+            return {title, price, id, image};
+        })
+        return products;
      } catch (error) {
          console.log(error);
      }
@@ -26,6 +34,10 @@ class Products{
 
 //ui class 
 class UI{
+
+    displayProducts(products){
+        console.log(products);
+    }
 
 }
 
@@ -41,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () =>{
     const products = new Products();
 
   //get all products
-  products.getProducts().then(data => console.log(data))  
+  products.getProducts().then(products => ui.displayProducts(products))  
 
 })
 
